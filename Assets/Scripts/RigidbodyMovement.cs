@@ -32,6 +32,9 @@ public class RigidbodyMovement : MonoBehaviour
         //Change the velocity of our player
         //rb.velocity = new Vector3(xMove, rb.velocity.y, zMove);
         Vector3 movement = (transform.forward * zMove) + (transform.right * xMove);
+        // make sure to apply the rigidbody's gravity to the y value
+        movement.y = rb.velocity.y;
+        //Vector3 movement = new Vectore(xMove, rb.velocity.y, zMove);
         rb.velocity = movement;
     }
 }
