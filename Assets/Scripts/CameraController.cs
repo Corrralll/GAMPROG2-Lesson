@@ -6,9 +6,10 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField]
     private GameObject target;
-
+    [SerializeField]
+    private Vector3 offset;
     private float rotationX, rotationY;
-
+    private Quaternion initialRotation;
     [SerializeField]
     private float headRotationLimit = 60f;
 
@@ -18,6 +19,8 @@ public class CameraController : MonoBehaviour
         //Make sure the cursor stays in the center of the screen
         //Change the lock state of our cursor
         Cursor.lockState = CursorLockMode.Locked;
+        //Save the initial rotation of the camera in the Editor Scene view
+        initialRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -36,14 +39,16 @@ public class CameraController : MonoBehaviour
     {
         //rotate the camera to face our mouse direction
         Quaternion rotation = Quaternion.Euler(-rotationX, rotationY, 0);
-        transform.rotation = rotation;
+        //add the initial rotation to the final rotation
+        Quaternion finalRotation = initialRotation * rotation;
+        transform.rotation = finalRotation;
 
         //make the camera follow the target
-        transform.position = target.transform.position;
+        // transform.position = target.transform.position + offset;
         //rotate the target to face the camera direction
         target.transform.rotation = Quaternion.Euler(
             target.transform.rotation.x,
-            rotationY,
+            finalRotation.eulerAngles.y,
             target.transform.rotation.z);
     }
 }
